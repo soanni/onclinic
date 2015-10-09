@@ -11,12 +11,12 @@
         <h2>Create new patient</h2>
         <?= form_open('patient/create');?>
             <label for="first"><span>Firstname:</span>
-                <input type="text" name="firstname" id="first" value="<?php echo set_value('firstname')?>" placeholder="Please enter patient's first name" required>
-                <?php echo form_error('first',"<div class='error'>",'</div>')?>
+                <input type="text" name="firstname" id="first" value="<?php echo set_value('firstname');?>" placeholder="Please enter patient's first name" required>
+                <?php echo form_error('firstname',"<div class='error'>",'</div>')?>
             </label>
             <label for="last"><span>Lastname:</span>
                 <input type="text" name="lastname" id="last" value="<?php echo set_value('lastname')?>" placeholder="Please enter patient's last name" required>
-                <?php echo form_error('last',"<div class='error'>",'</div>')?>
+                <?php echo form_error('lastname',"<div class='error'>",'</div>')?>
             </label>
             <label for="age"><span>Age:</span>
                 <input type="number" name="age" id="age" value="<?php echo set_value('age')?>" min = "0" max="120" placeholder="Please enter patient's age" required>
@@ -35,7 +35,7 @@
             </label>
             <label for="phone"><span>Phone number:</span>
                 <input type="text" name="telephone" id="phone" value="<?php echo set_value('telephone')?>" placeholder="Phone number format x-xxx-xxx-xxxx" required>
-                <?php echo form_error('phone',"<div class='error'>",'</div>')?>
+                <?php echo form_error('telephone',"<div class='error'>",'</div>')?>
             </label>
             <label for="email"><span>Email address:</span>
                 <input type="email" name="email" id="email" value="<?php echo set_value('email')?>" placeholder="Please enter patient's email" required>

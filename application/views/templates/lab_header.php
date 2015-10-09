@@ -25,7 +25,7 @@
                 <?php endif; ?>
                 <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] && $_SESSION['is_operator']): ?>
                     <li>
-                        <a href="<?php echo site_url('patient/list');?>">Patient List</a>
+                        <a href="<?php echo site_url('patient/index');?>">Patient List</a>
                     </li>
                     <li>
                         <a href="<?php echo site_url('patient/create');?>">Patient Create</a>

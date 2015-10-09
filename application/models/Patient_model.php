@@ -21,6 +21,18 @@ class Patient_model extends CI_Model{
     }
 
     public function getAllRows(){
-        return $this->db->get('patients');
+        $this->db->select('patient_id,firstname, lastname, age, sex, ssn, telephone, email, birthday, locked');
+        $this->db->from('patients');
+        return $this->db->get()->result_array();
+    }
+
+    public function getRow($id){
+        $query = $this->db->get_where('patients',array('patient_id'=>$id));
+        return $query->row_array();
+    }
+
+    public function update($data,$id){
+        $this->db->where('patient_id',$id);
+        return $this->db->update('patients',$data);
     }
 }
