@@ -50,11 +50,12 @@ class Operator extends CI_Controller{
                         $_SESSION['user_id'] = (int)$userrow['user_id'];
                         $_SESSION['username'] = (string)$username;
                         $_SESSION['logged_in'] = (bool)true;
+                        $_SESSION['is_operator'] = (bool)true;
                         $redirect = site_url('operator/profile/' . $userrow['user_id']);
                         //remove after completing profile
-                        $data->error = 'You are logged in';
-                        //redirect($redirect);
-                        //exit;
+                        //$data->error = 'You are logged in';
+                        redirect($redirect);
+                        exit;
                     }else{
                         $data->error = "Incorrect password provided. Please, try again";
                     }
@@ -68,14 +69,26 @@ class Operator extends CI_Controller{
         }
     }
 
-    public function logout()
-    {
-        // TODO: Implement logout() method.
+    public function logout(){
+        $data = new stdClass();
+        $data->title = 'Log out';
+        if (isset($_SESSION['logged_in']) && $_SESSION['logged_in']) {
+            // remove session data
+            foreach ($_SESSION as $key => $value) {
+                unset($_SESSION[$key]);
+            }
+            session_destroy();
+            // user logout ok
+            redirect('/');
+        } else {
+            // there user was not logged in, we cannot logged him out,
+            // redirect him to site root
+            redirect('/');
+        }
     }
 
-    public function profile($userid)
-    {
-        // TODO: Implement profile() method.
+    public function profile($userid = null){
+        $this->load->view('operator/profile');
     }
 
 }

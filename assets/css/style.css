@@ -13,6 +13,8 @@ body {
 	min-width: 960px;
 	padding: 0;
 }
+
+/* BODY DIV #header */
 #header {
 	background: url('../images/bg-header.jpg') repeat-x;
 	margin: 0;
@@ -66,6 +68,8 @@ body {
 #header ul li.selected a {
 	background: 	url('../images/dots.png') repeat-x left bottom;
 }
+
+/* BODY DIV SECTION */
 #section {
 	background: url('../images/chemist.png') no-repeat center top;
 	border-bottom: 2px solid #ffe600;
@@ -108,6 +112,8 @@ body {
 #section div div p a:hover {
 	color: #386370;
 }
+
+/* BODY DIV FEATURED */
 #featured {
 	background: url('../images/bg-content.jpg') repeat;
 	margin: 0;
@@ -288,7 +294,7 @@ body {
 	float: left;
 	margin: 0 10px 0 20px;
 	padding: 0;
-	width: 678px;
+	width: 960px;
 }
 #body .content > img {
 	border: 1px solid #fff;
@@ -479,6 +485,19 @@ body {
 	padding: 3px 5px;
 	width: 308px;
 }
+
+#body .content form label select {
+	border: 1px solid #94acb3;
+	color: #767676;
+	display: block;
+	float: left;
+	font-family: 'Conv_Ubuntu-Light';
+	font-size: 14px;
+	margin: 0;
+	padding: 3px 5px;
+	width: 319px;
+}
+
 #body .content form label textarea {
 	border: 1px solid #94acb3;
 	color: #767676;
@@ -692,4 +711,9 @@ body {
 
 #footer div p a:hover {
 	color: #000;
+}
+
+div .error{
+	color: #009900;
+	font-weight: bold;
 }
