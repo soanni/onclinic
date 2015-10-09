@@ -23,6 +23,7 @@ class Patient_model extends CI_Model{
     public function getAllRows(){
         $this->db->select('patient_id,firstname, lastname, age, sex, ssn, telephone, email, birthday, locked');
         $this->db->from('patients');
+        $this->db->order_by('lastname','ASC');
         return $this->db->get()->result_array();
     }
 
@@ -34,5 +35,15 @@ class Patient_model extends CI_Model{
     public function update($data,$id){
         $this->db->where('patient_id',$id);
         return $this->db->update('patients',$data);
+    }
+
+    public function lockPatient($id){
+        $this->db->where('patient_id',$id);
+        return $this->db->update('patients',array('changedate'=>date('Y-m-j H:i:s'),'locked'=>'1'));
+    }
+
+    public function unlockPatient($id){
+        $this->db->where('patient_id',$id);
+        return $this->db->update('patients',array('changedate'=>date('Y-m-j H:i:s'),'locked'=>'0'));
     }
 }

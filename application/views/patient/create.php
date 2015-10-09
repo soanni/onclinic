@@ -24,9 +24,9 @@
             </label>
             <label for="sex"><span>Sex:</span>
                 <select name="sex" id="sex">
-                    <option value="1" selected>Male</option>
-                    <option value="2">Female</option>
-                    <option value="3">Not selected</option>
+                    <option value="1" <?php echo set_select('sex','1',TRUE);?>>Male</option>
+                    <option value="2" <?php echo set_select('sex','2');?>>Female</option>
+                    <option value="3" <?php echo set_select('sex','3');?>>Not selected</option>
                 </select>
             </label>
             <label for="ssn"><span>Social Security Number:</span>
@@ -43,7 +43,8 @@
             </label>
             <!--passcode is auto-generated in controller -->
             <label for="passcode"><span>Passcode:</span>
-                <input type="text" name="passcode" id="passcode" value="<?php if(isset($passcode)){echo $passcode;}?>" required>
+                <input type="text" name="passcode" id="passcode" value="<?php echo set_value('passcode', $passcode)?>" required>
+                <?php echo form_error('passcode',"<div class='error'>",'</div>')?>
             </label>
             <label for="birthday"><span>Birthday:</span>
                 <input type="date" name="birthday" id="birthday" value="<?php echo set_value('birthday')?>" placeholder="Please enter patient's birth date" required>

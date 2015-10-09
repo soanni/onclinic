@@ -26,9 +26,9 @@
             </label>
             <label for="sex"><span>Sex:</span>
                 <select name="sex" id="sex">
-                    <option value="1" selected>Male</option>
-                    <option value="2">Female</option>
-                    <option value="3">Not selected</option>
+                    <option value="1" <?php if($result['sex']==1){ echo' selected';}?>>Male</option>
+                    <option value="2" <?php if($result['sex']==2){ echo' selected';}?>>Female</option>
+                    <option value="3" <?php if($result['sex']==3){ echo' selected';}?>>Not selected</option>
                 </select>
             </label>
             <label for="ssn"><span>Social Security Number:</span>
@@ -48,7 +48,7 @@
                 <input type="text" name="passcode" id="passcode" value="<?php echo set_value('passcode',$result['passcode'])?>" required>
             </label>
             <label for="birthday"><span>Birthday:</span>
-                <input type="date" name="birthday" id="birthday" value="<?php echo set_value('birthday',$result['birthday'])?>" placeholder="Please enter patient's birth date" required>
+                <input type="date" name="birthday" id="birthday" value="<?php echo set_value('birthday',nice_date($result['birthday'],'Y-m-d'))?>" placeholder="Please enter patient's birth date" required>
                 <?php echo form_error('birthday',"<div class='error'>",'</div>')?>
             </label>
             <input type="submit" value="" id="submit">

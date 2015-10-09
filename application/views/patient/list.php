@@ -5,19 +5,20 @@
     <div id="body">
         <div class="content">
             <h2>List of patients</h2>
-            <table>
+            <table id="patients">
                 <thead>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Age</th>
-                <th>Sex</th>
-                <th>SSN</th>
-                <th>Telephone</th>
-                <th>Email</th>
-                <th>Birthday</th>
-                <th>Locked</th>
-                <th>Update</th>
-                <th>Delete</th>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <th>SSN</th>
+                    <th>Telephone</th>
+                    <th>Email</th>
+                    <th>Birthday</th>
+                    <th>Locked</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                    <th>Switch</th>
                 </thead>
                 <tbody>
                 <?php foreach($result as $row):?>
@@ -38,6 +39,12 @@
                         <td><?php if($row['locked']){ echo 'Locked';}else{echo 'Active';}?></td>
                         <td><a href="<?php echo site_url('patient/edit') . '/' .$row['patient_id'];?>">Update</a></td>
                         <td><a href="<?php echo site_url('patient/delete/') . '/' .$row['patient_id'];?>">Delete</a></td>
+                        <?php if($row['locked']):?>
+                            <td><a href="<?php echo site_url('patient/unlock/') . '/' .$row['patient_id'];?>">Enable</a></td>
+                        <?php else: ?>
+                            <td><a href="<?php echo site_url('patient/lock/') . '/' .$row['patient_id'];?>">Disable</a></td>
+                        <?php endif;?>
+
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

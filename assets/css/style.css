@@ -712,8 +712,41 @@ body {
 #footer div p a:hover {
 	color: #000;
 }
-
+/*****************************************************************/
 div .error{
 	color: #009900;
 	font-weight: bold;
+}
+
+#patients{
+	width: 90%;
+	border-collapse: collapse;
+}
+
+th {
+	height: 50px;
+	text-align: center;
+	border-right: solid black 1px;
+}
+
+thead > tr{
+	border-bottom: solid black 1px;
+}
+
+td {
+	height: 50px;
+	text-align: center;
+	border-right: solid black 1px;
+}
+
+tr:nth-child(even) {
+	background-color: white;
+}
+
+tr.noactive{
+	border: 2px solid red;
+}
+
+span.auth{
+	border: solid 1px red;
 }
