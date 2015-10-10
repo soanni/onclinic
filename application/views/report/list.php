@@ -19,8 +19,8 @@
                                 <th>Phone</th>
                                 <th>Email</th>
                                 <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] && $_SESSION['is_operator']): ?>
-                                    <th>Update</th>'
-                                    <th>Delete</th>'
+                                    <th>Update</th>
+                                    <th>Delete</th>
                                 <?php endif; ?>
                                 <th>View</th>
                             </tr>

@@ -739,7 +739,7 @@ td {
 	border-right: solid black 1px;
 }
 
-tr:nth-child(even) {
+#patients > tbody >tr:nth-child(even) {
 	background-color: white;
 }
 

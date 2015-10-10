@@ -5,6 +5,8 @@
 <div id="body">
     <p class="content">
         <h2 class="main_heading"><?php echo "Report #{$head['reportid']}";?></h2>
+        <?php $link = "report/exportToPdf/". $head['reportid']; ?>
+        <a href="<?php echo site_url($link);?>">Export to PDF</a>
         <div class="report_head">
             <p>
                 <ul>

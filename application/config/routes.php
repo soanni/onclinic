@@ -50,6 +50,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |		my-controller/my-method	-> my_controller/my_method
 */
 
+$route['report/exportToPdf/(:any)'] = 'report/exportToPdf/$1';
 $route['patient/getLastFirstNames'] = 'patient/getLastFirstNames';
 $route['patient/login'] = 'patient/login';
 $route['patient/edit/(:any)'] = 'patient/edit/$1';

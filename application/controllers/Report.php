@@ -55,16 +55,17 @@ class Report extends CI_Controller{
         if(!is_null($patientid) && is_numeric($patientid)){
             if((isset($_SESSION['is_operator']) && $_SESSION['is_operator']) ||
                 (isset($_SESSION['is_patient']) && $_SESSION['is_patient'] && $_SESSION['user_id'] == $patientid)){
-                $patients[$patientid] = $_SESSION['username'];
+                $this->load->model('patient_model');
+                $patient_row = $this->patient_model->getRow($patientid);
+                $fullname = ucfirst($patient_row['lastname']) . ' ' . ucfirst($patient_row['firstname']);
+                $data->heading = "List of reports, {$fullname}";
+                $patients[$patientid] = $fullname;
                 $data->patients = $patients;
                 $reports = array();
                 foreach($patients as $id=>$name){
                     $reports[$id] = $this->report_model->get_reports_list($id);
                 }
                 $data->reports = $reports;
-                $this->load->model('patient_model');
-                $patient_row = $this->patient_model->getRow($patientid);
-                $data->heading = 'List of reports, ' . ucfirst($patient_row['lastname']) . ' ' . ucfirst($patient_row['firstname']);
                 $this->load->view('report/list',$data);
             }else{
                 redirect('/');
@@ -98,6 +99,27 @@ class Report extends CI_Controller{
             $this->load->view('report/view',$data);
         }else{
             redirect('report/index');
+        }
+    }
+
+    public function exportToPdfAndEmail($reportid){
+        $filename = "report{$reportid}" . time();
+        $pdfFilePath = str_replace('/','',FCPATH . DIRECTORY_SEPARATOR . "downloads" . DIRECTORY_SEPARATOR . "{$filename}" . ".pdf");
+        $data = new stdClass();
+        if (file_exists($pdfFilePath) == FALSE){
+            ini_set('memory_limit','32M');
+            $head = $this->report_model->getReportHead($reportid);
+            $details = $this->report_model->getReportDetails($reportid);
+            $data->head = $head[0];
+            $data->details = $details;
+            //render the view into HTML
+            $html = $this->load->view('report/pdf_view', $data, true);
+            $this->load->library('pdf');
+            $pdf = $this->pdf->load();
+            $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822));
+            $pdf->WriteHTML($html);
+            // save to file
+            $pdf->Output($pdfFilePath, 'F');
         }
     }
 }
