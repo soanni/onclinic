@@ -10,7 +10,7 @@
             </div>
     <?php endif; ?>
     <div class="content">
-        <h2>please provide your credentials to log in</h2>
+        <h2 class="main_heading">please provide your credentials to log in</h2>
         <?= form_open('operator/login') ?>
             <label for="username"> <span>Username*</span>
                 <input type="text" name="username" id="username" placeholder="Please provide your username">

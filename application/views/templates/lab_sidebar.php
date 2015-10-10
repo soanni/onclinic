@@ -9,5 +9,8 @@
         <li <?php if(uri_string() == 'report/create'){echo 'class="selected"';}?>>
             <a href="<?php echo site_url('report/create');?>">Report Create</a>
         </li>
+        <li <?php if(uri_string() == 'report/create'){echo 'class="selected"';}?>>
+            <a href="<?php echo site_url('report/index');?>">Report list</a>
+        </li>
     </ul>
 </div>

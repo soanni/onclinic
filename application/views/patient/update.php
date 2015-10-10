@@ -10,7 +10,7 @@
             </div>
         <?php endif; ?>
         <div class="content">
-            <h2>Edit patient</h2>
+            <h2 class="main_heading">Edit patient</h2>
             <?= form_open($path) ?>
             <label for="first"><span>Firstname:</span>
                 <input type="text" name="firstname" id="first" value="<?php echo set_value('firstname',ucfirst($result['firstname']))?>" placeholder="Please enter patient's first name" required>

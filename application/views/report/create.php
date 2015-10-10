@@ -10,7 +10,7 @@
             </div>
         <?php endif; ?>
         <div class="content">
-            <h2>Create new report</h2>
+            <h2 class="main_heading">Create new report</h2>
             <?php echo validation_errors(); ?>
             <?= form_open('report/create');?>
                 <label for="patient"><span>Patient:</span>

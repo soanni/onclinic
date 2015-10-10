@@ -19,6 +19,7 @@ class Report extends CI_Controller{
         $this->load->model('report_model');
         $this->load->helper('form');
         $this->load->helper('url_helper');
+        $this->load->helper('date');
         $this->load->library('form_validation');
         $this->load->library('session');
     }
@@ -51,10 +52,31 @@ class Report extends CI_Controller{
     public function index($patientid = null){
         $data = new stdClass();
         $data->title = 'List of reports';
-        if(!is_null($patientid)){
+        if(!is_null($patientid) && is_numeric($patientid)){
 
         }else{
+            $patients = $this->report_model->getPatients();
+            $data->patients = $patients;
+            $reports = array();
+            foreach($patients as $id=>$name){
+                $reports[$id] = $this->report_model->get_reports_list($id);
+            }
+            $data->reports = $reports;
+            $this->load->view('report/list',$data);
+        }
+    }
 
+    public function view($reportid){
+        if(!is_null($reportid) && is_numeric($reportid)){
+            $data = new stdClass();
+            $data->title = "Detailed report";
+            $head = $this->report_model->getReportHead($reportid);
+            $details = $this->report_model->getReportDetails($reportid);
+            $data->head = $head[0];
+            $data->details = $details;
+            $this->load->view('report/view',$data);
+        }else{
+            redirect('report/index');
         }
     }
 }

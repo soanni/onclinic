@@ -1,54 +1,47 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-include APPPATH . 'views\templates\lab_header.php';
+    defined('BASEPATH') OR exit('No direct script access allowed');
+    include APPPATH . 'views\templates\lab_header.php';
 ?>
     <div id="body">
         <div class="content">
-            <h2>List of patients reports</h2>
-            <table id="patients">
-                <thead>
-                <th>Firstname</th>
-                <th>Lastname</th>
-                <th>Age</th>
-                <th>Sex</th>
-                <th>SSN</th>
-                <th>Telephone</th>
-                <th>Email</th>
-                <th>Birthday</th>
-                <th>Locked</th>
-                <th>Update</th>
-                <th>Delete</th>
-                <th>Switch</th>
-                </thead>
-                <tbody>
-                <?php foreach($result as $row):?>
-                    <tr class = "<?php if(!$row['locked']){
-                        echo 'active';
-                    }else{
-                        echo 'noactive';
-                    }
-                    ?>">
-                        <td><?php echo htmlspecialchars(ucfirst($row['firstname']));?></td>
-                        <td><?php echo htmlspecialchars(ucfirst($row['lastname']));?></td>
-                        <td><?php echo htmlspecialchars($row['age']);?></td>
-                        <td><?php if($row['sex'] == 1){echo 'Male';}elseif($row['sex'] == 2){echo 'Female';}else{echo 'Not selected';}?></td>
-                        <td><?php echo htmlspecialchars($row['ssn']);?></td>
-                        <td><?php echo htmlspecialchars($row['telephone']);?></td>
-                        <td><?php echo htmlspecialchars($row['email']);?></td>
-                        <td><?php echo nice_date($row['birthday'],'Y-m-d'); ?></td>
-                        <td><?php if($row['locked']){ echo 'Locked';}else{echo 'Active';}?></td>
-                        <td><a href="<?php echo site_url('patient/edit') . '/' .$row['patient_id'];?>">Update</a></td>
-                        <td><a href="<?php echo site_url('patient/delete/') . '/' .$row['patient_id'];?>">Delete</a></td>
-                        <?php if($row['locked']):?>
-                            <td><a href="<?php echo site_url('patient/unlock/') . '/' .$row['patient_id'];?>">Enable</a></td>
-                        <?php else: ?>
-                            <td><a href="<?php echo site_url('patient/lock/') . '/' .$row['patient_id'];?>">Disable</a></td>
-                        <?php endif;?>
-
-                    </tr>
-                <?php endforeach; ?>
-                </tbody>
-            </table>
+            <h2 class="main_heading">List of ALL patients reports</h2>
+            <?php foreach($patients as $key => $value):?>
+                <?php if(!empty($reports[$key])): ?>
+                    <h2><?php echo $value;?></h2>
+                    <table class="reports">
+                        <thead>
+                            <tr>
+                                <th>Report date</th>
+                                <th>Doctor name</th>
+                                <th>Patient firstname</th>
+                                <th>Patient lastname</th>
+                                <th>Patient SSN</th>
+                                <th>Phone</th>
+                                <th>Email</th>
+                                <th>Update</th>
+                                <th>Delete</th>
+                                <th>View</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach($reports[$key] as $row):?>
+                            <tr>
+                                <td><?php echo nice_date($row['created'],'Y-m-d'); ?></td>
+                                <td><?php echo htmlspecialchars($row['doctorname']);?></td>
+                                <td><?php echo htmlspecialchars(ucfirst($row['firstname']));?></td>
+                                <td><?php echo htmlspecialchars(ucfirst($row['lastname']));?></td>
+                                <td><?php echo htmlspecialchars($row['ssn']);?></td>
+                                <td><?php echo htmlspecialchars($row['telephone']);?></td>
+                                <td><?php echo htmlspecialchars($row['email']);?></td>
+                                <td><a href="<?php echo site_url('report/edit') . '/' .$row['reportid'];?>">Update</a></td>
+                                <td><a href="<?php echo site_url('report/delete/') . '/' .$row['reportid'];?>">Delete</a></td>
+                                <td><a href="<?php echo site_url('report/view/') . '/' .$row['reportid'];?>">View</a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                <?php endif;?>
+            <?php endforeach; ?>
         </div>
     </div>
 <?php include APPPATH . 'views\templates\lab_footer.php';?>

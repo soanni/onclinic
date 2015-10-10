@@ -4,7 +4,7 @@
 ?>
     <div id="body">
         <div class="content">
-            <h2>List of patients</h2>
+            <h2 class="main_heading">List of patients</h2>
             <table id="patients">
                 <thead>
                     <th>Firstname</th>

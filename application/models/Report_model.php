@@ -38,7 +38,7 @@
                 'doctorid' => $details['doctor'],
                 'patientid' => $details['patient'],
                 'created' => date('Y-m-j H:i:s'),
-                'comment' => $details['comment'],
+                'comment' => $this->db->escape($details['comment']),
                 'changedate' => date('Y-m-j H:i:s')
             );
             if($this->db->insert('reports',$data)){
@@ -58,11 +58,24 @@
             }
         }
 
-        public function get_list($patientid){
+        public function get_reports_list($patientid){
             if(!is_null($patientid)){
-
+                $select = "SELECT
+                            r.reportid,
+                            p.firstname,
+                            p.lastname,
+                            p.ssn,
+                            p.telephone,
+                            p.email,
+                            r.created,
+                            d.doctorname
+                          FROM onclinic.reports r
+                          INNER JOIN onclinic.patients p ON r.patientid = p.patient_id
+                          INNER JOIN onclinic.doctors d ON r.doctorid = d.doctorid
+                          WHERE r.patientid = {$patientid}
+                          ORDER BY p.lastname ASC, r.created DESC";
             }else{
-                $query = 'SELECT
+                $select = 'SELECT
                             r.reportid,
                             p.firstname,
                             p.lastname,
@@ -76,6 +89,42 @@
                           INNER JOIN onclinic.doctors d ON r.doctorid = d.doctorid
                           ORDER BY p.lastname ASC, r.created DESC';
             }
+            return $this->db->query($select)->result_array();
+        }
+
+        public function getReportHead($reportid){
+                $select = "SELECT
+                            r.reportid,
+                            p.firstname,
+                            p.lastname,
+                            p.ssn,
+                            p.telephone,
+                            p.email,
+                            r.created,
+                            d.doctorname,
+                            r.comment
+                           FROM onclinic.reports r
+                           INNER JOIN onclinic.patients p ON r.patientid = p.patient_id
+                           INNER JOIN onclinic.doctors d ON r.doctorid = d.doctorid
+                           WHERE r.reportid = {$reportid}";
+                return $this->db->query($select)->result_array();
+        }
+
+        public function getReportDetails($reportid){
+            $select = "SELECT
+                        r.testid,
+                        t.testname,
+                        r.value,
+                        t.range_min,
+                        t.range_max,
+                        t.unitid,
+                        u.unitname,
+                        r.testcomment
+                       FROM onclinic.reports_items r
+                       LEFT JOIN onclinic.tests t ON r.testid = t.testid
+                       LEFT JOIN onclinic.units u ON t.testid = u.unitid
+                       WHERE r.reportid = {$reportid}";
+            return $this->db->query($select)->result_array();
         }
 
         //////////////////////////
@@ -94,7 +143,7 @@
                 'patientid' => $patientid,
                 'testid' => $testid,
                 'value' => $result,
-                'testcomment'=> $comment
+                'testcomment'=> $this->db->escape($comment)
             );
             return $this->db->insert('reports_items',$data);
         }
