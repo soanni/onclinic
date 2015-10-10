@@ -27,12 +27,6 @@
                     <li <?php if(strpos(current_url(),'operator/profile')){echo 'class="selected"';}?>>
                         <a href="<?php echo site_url('operator/profile');?>">Employee profile</a>
                     </li>
-                    <li <?php if(uri_string() == 'patient/index'){echo 'class="selected"';}?>>
-                        <a href="<?php echo site_url('patient/index');?>">Patient List</a>
-                    </li>
-                    <li <?php if(uri_string() == 'patient/create'){echo 'class="selected"';}?>>
-                        <a href="<?php echo site_url('patient/create');?>">Patient Create</a>
-                    </li>
                     <li>
                         <?php
                             echo "<span class='auth'> Welcome, {$_SESSION['username']}</span>";
