@@ -4,7 +4,7 @@
 ?>
     <div id="body">
         <div class="content">
-            <h2 class="main_heading">List of ALL patients reports</h2>
+            <h2 class="main_heading"><?php echo $heading;?></h2>
             <?php foreach($patients as $key => $value):?>
                 <?php if(!empty($reports[$key])): ?>
                     <h2><?php echo $value;?></h2>
@@ -18,8 +18,10 @@
                                 <th>Patient SSN</th>
                                 <th>Phone</th>
                                 <th>Email</th>
-                                <th>Update</th>
-                                <th>Delete</th>
+                                <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] && $_SESSION['is_operator']): ?>
+                                    <th>Update</th>'
+                                    <th>Delete</th>'
+                                <?php endif; ?>
                                 <th>View</th>
                             </tr>
                         </thead>
@@ -33,8 +35,10 @@
                                 <td><?php echo htmlspecialchars($row['ssn']);?></td>
                                 <td><?php echo htmlspecialchars($row['telephone']);?></td>
                                 <td><?php echo htmlspecialchars($row['email']);?></td>
-                                <td><a href="<?php echo site_url('report/edit') . '/' .$row['reportid'];?>">Update</a></td>
-                                <td><a href="<?php echo site_url('report/delete/') . '/' .$row['reportid'];?>">Delete</a></td>
+                                <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] && $_SESSION['is_operator']):?>
+                                    <td><a href="<?php echo site_url('report/edit') . '/' .$row['reportid'];?>">Update</a></td>
+                                    <td><a href="<?php echo site_url('report/delete/') . '/' .$row['reportid'];?>">Delete</a></td>
+                                <?php endif;?>
                                 <td><a href="<?php echo site_url('report/view/') . '/' .$row['reportid'];?>">View</a></td>
                             </tr>
                         <?php endforeach; ?>

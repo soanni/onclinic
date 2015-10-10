@@ -19,6 +19,7 @@
                     <th>Update</th>
                     <th>Delete</th>
                     <th>Switch</th>
+                    <th>Reports</th>
                 </thead>
                 <tbody>
                 <?php foreach($result as $row):?>
@@ -30,7 +31,9 @@
                     ?>">
                         <td><?php echo htmlspecialchars(ucfirst($row['firstname']));?></td>
                         <td><?php echo htmlspecialchars(ucfirst($row['lastname']));?></td>
-                        <td><?php echo htmlspecialchars($row['age']);?></td>
+                        <td>
+                        <?php echo htmlspecialchars($row['age']);?>
+                        </td>
                         <td><?php if($row['sex'] == 1){echo 'Male';}elseif($row['sex'] == 2){echo 'Female';}else{echo 'Not selected';}?></td>
                         <td><?php echo htmlspecialchars($row['ssn']);?></td>
                         <td><?php echo htmlspecialchars($row['telephone']);?></td>
@@ -44,7 +47,7 @@
                         <?php else: ?>
                             <td><a href="<?php echo site_url('patient/lock/') . '/' .$row['patient_id'];?>">Disable</a></td>
                         <?php endif;?>
-
+                        <td><a href="<?php echo site_url('report/index/') . '/' .$row['patient_id'];?>">Reports</a></td>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

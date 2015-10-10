@@ -1,3 +1,20 @@
+$(document).ready(function(){
+    var $sfield = $('#username_patient').autocomplete({
+        source: function(request, response){
+            var url = "getLastFirstNames";
+            $.post(url, {data:request.term}, function(data){
+                response($.map(data, function(names) {
+                    return {
+                        value: names.fullname
+                    };
+                }));
+            }, "json");
+        },
+        minLength: 2,
+        autofocus: true
+    });
+});
+
 function addRow(tableID) {
     var table = document.getElementById(tableID);
     var rowCount = table.rows.length;
@@ -19,3 +36,4 @@ function deleteRow(tableID) {
         table.deleteRow(rowCount-1);
     }
 }
+

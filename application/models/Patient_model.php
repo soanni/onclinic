@@ -33,6 +33,8 @@ class Patient_model extends CI_Model{
     }
 
     public function update($data,$id){
+        $data['firstname'] = strtolower($data['firstname']);
+        $data['lastname'] = strtolower($data['lastname']);
         $this->db->where('patient_id',$id);
         return $this->db->update('patients',$data);
     }
@@ -45,5 +47,19 @@ class Patient_model extends CI_Model{
     public function unlockPatient($id){
         $this->db->where('patient_id',$id);
         return $this->db->update('patients',array('changedate'=>date('Y-m-j H:i:s'),'locked'=>'0'));
+    }
+
+    // used for autocomplete patient login field
+    public function getLastFirst($str){
+        $select = "SELECT CONCAT_WS(', ',CONCAT(UCASE(LEFT(lastname, 1)), LCASE(SUBSTRING(lastname, 2))) ,CONCAT(UCASE(LEFT(firstname, 1)), LCASE(SUBSTRING(firstname, 2)))) AS fullname
+                   FROM onclinic.patients
+                   WHERE lastname LIKE '%{$str}%'";
+        $query = $this->db->query($select);
+        return $query->result();
+    }
+
+    public function getPatientRow($first,$last){
+        $query = $this->db->get_where('patients',array('firstname'=>$first,'lastname'=>$last));
+        return $query->row_array();
     }
 }

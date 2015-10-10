@@ -51,6 +51,7 @@ class Operator extends CI_Controller{
                         $_SESSION['username'] = (string)$username;
                         $_SESSION['logged_in'] = (bool)true;
                         $_SESSION['is_operator'] = (bool)true;
+                        $_SESSION['is_patient'] = (bool)false;
                         $redirect = site_url('operator/profile/' . $userrow['user_id']);
                         //remove after completing profile
                         //$data->error = 'You are logged in';

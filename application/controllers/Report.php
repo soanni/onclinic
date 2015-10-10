@@ -53,16 +53,37 @@ class Report extends CI_Controller{
         $data = new stdClass();
         $data->title = 'List of reports';
         if(!is_null($patientid) && is_numeric($patientid)){
-
-        }else{
-            $patients = $this->report_model->getPatients();
-            $data->patients = $patients;
-            $reports = array();
-            foreach($patients as $id=>$name){
-                $reports[$id] = $this->report_model->get_reports_list($id);
+            if((isset($_SESSION['is_operator']) && $_SESSION['is_operator']) ||
+                (isset($_SESSION['is_patient']) && $_SESSION['is_patient'] && $_SESSION['user_id'] == $patientid)){
+                $patients[$patientid] = $_SESSION['username'];
+                $data->patients = $patients;
+                $reports = array();
+                foreach($patients as $id=>$name){
+                    $reports[$id] = $this->report_model->get_reports_list($id);
+                }
+                $data->reports = $reports;
+                $this->load->model('patient_model');
+                $patient_row = $this->patient_model->getRow($patientid);
+                $data->heading = 'List of reports, ' . ucfirst($patient_row['lastname']) . ' ' . ucfirst($patient_row['firstname']);
+                $this->load->view('report/list',$data);
+            }else{
+                redirect('/');
             }
-            $data->reports = $reports;
-            $this->load->view('report/list',$data);
+        }else{
+            // only for operators
+            if(isset($_SESSION['is_operator']) && $_SESSION['is_operator']){
+                $patients = $this->report_model->getPatients();
+                $data->patients = $patients;
+                $reports = array();
+                foreach($patients as $id=>$name){
+                    $reports[$id] = $this->report_model->get_reports_list($id);
+                }
+                $data->reports = $reports;
+                $data->heading = 'List of ALL reports';
+                $this->load->view('report/list',$data);
+            }else{
+                redirect('/');
+            }
         }
     }
 

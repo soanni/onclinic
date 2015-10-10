@@ -4,6 +4,7 @@
     $path = 'patient/edit/' . $result['patient_id'];
 ?>
     <div id="body">
+        <?php echo validation_errors();?>
         <?php if(isset($error)) : ?>
             <div>
                 <?php echo $error; ?>
