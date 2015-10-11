@@ -3,6 +3,14 @@
     include APPPATH . 'views\templates\lab_header.php';
 ?>
     <div id="body">
+        <?php if(isset($_SESSION['logged_in']) && $_SESSION['logged_in'] && $_SESSION['is_operator']): ?>
+            <?php include_once APPPATH . 'views\templates\lab_sidebar.php';?>
+        <?php endif; ?>
+        <?php if(isset($error)) : ?>
+            <div>
+                <?php echo $error; ?>
+            </div>
+        <?php endif; ?>
         <div class="content">
             <h2 class="main_heading"><?php echo $heading;?></h2>
             <?php foreach($patients as $key => $value):?>

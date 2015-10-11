@@ -40,11 +40,11 @@
                 <tbody>
                 <?php foreach($details as $row):?>
                     <tr>
-                        <td><?php echo htmlspecialchars($row['testname']);?></td>
+                        <td><?php echo $row['testname'];?></td>
                         <td><?php echo $row['value'];?></td>
                         <td><?php echo $row['range_min'];?></td>
                         <td><?php echo $row['range_max'];?></td>
-                        <td><?php echo htmlspecialchars($row['unitname']);?></td>
+                        <td><?php echo $row['unitname'];?></td>
                         <td><?php echo htmlspecialchars($row['testcomment']);?></td>
                     </tr>
                 <?php endforeach;?>

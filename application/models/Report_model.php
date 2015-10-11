@@ -6,6 +6,72 @@
             $this->load->database();
         }
 
+        /////////////////////////// CRUD
+        public function insertReportWithDetails($details){
+            $data = array(
+                'doctorid' => $details['doctor'],
+                'patientid' => $details['patient'],
+                'created' => date('Y-m-j H:i:s'),
+                'comment' => $details['comment'],
+                //'comment' => $this->db->escape($details['comment']),
+                'changedate' => date('Y-m-j H:i:s')
+            );
+            if($this->db->insert('reports',$data)){
+                // get the id of the new report just created
+                $id = $this->db->insert_id();
+                $count = count($details['test']);
+                for($i = 0; $i < $count; $i++){
+                    if($this->insertDetailsRow($id, $details['patient'],$details['test'][$i], $details['result'][$i],$details['test_comment'][$i])){
+                        continue;
+                    }else{
+                        return 0;
+                    }
+                }
+                return 1;
+            }
+            return 0;
+        }
+
+        public function updateReport($reportid, $details){
+            // trying to delete details first
+            if($this->_deleteDetails($reportid)){
+                //update report heading
+                $data = array(
+                    'doctorid' => $details['doctor'],
+                    'patientid' => $details['patient'],
+                    'comment' => $details['comment'],
+                    //'comment' => $this->db->escape($details['comment']),
+                    'changedate' => date('Y-m-j H:i:s')
+                );
+                $this->db->update('reports', $data, array('reportid'=>$reportid));
+                if($this->db->affected_rows()){
+                    //insert details
+                    $count = count($details['test']);
+                    for($i = 0; $i < $count; $i++){
+                        if($this->insertDetailsRow($reportid, $details['patient'],$details['test'][$i], $details['result'][$i],$details['test_comment'][$i])){
+                            continue;
+                        }else{
+                            return 0;
+                        }
+                    }
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        public function deleteReport($reportid){
+            // trying to delete details first
+            if($this->_deleteDetails($reportid)){
+                $this->db->delete('reports',array('reportid'=>$reportid));
+                if($this->db->affected_rows()){
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        ////////////////////////////////////////
         public function getPatients(){
             $str = 'SELECT patient_id,CONCAT_WS(", ",CONCAT(UCASE(LEFT(firstname, 1)), LCASE(SUBSTRING(firstname, 2))) ,CONCAT(UCASE(LEFT(lastname, 1)), LCASE(SUBSTRING(lastname, 2)))) AS fullname FROM onclinic.patients';
             $query = $this->db->query($str);
@@ -31,31 +97,6 @@
             $query = $this->db->query($select);
             $arr = $query->result_array();
             return $this->transform($arr);
-        }
-
-        public function insertReportWithDetails($details){
-            $data = array(
-                'doctorid' => $details['doctor'],
-                'patientid' => $details['patient'],
-                'created' => date('Y-m-j H:i:s'),
-                'comment' => $this->db->escape($details['comment']),
-                'changedate' => date('Y-m-j H:i:s')
-            );
-            if($this->db->insert('reports',$data)){
-                // get the id of the new report just created
-                $id = $this->db->insert_id();
-                $count = count($details['test']);
-                for($i = 0; $i < $count; $i++){
-                    if($this->insertDetailsRow($id, $details['patient'],$details['test'][$i], $details['result'][$i],$details['test_comment'][$i])){
-                        continue;
-                    }else{
-                        return 0;
-                    }
-                }
-                return 1;
-            }else{
-                return 0;
-            }
         }
 
         public function get_reports_list($patientid){
@@ -95,12 +136,14 @@
         public function getReportHead($reportid){
                 $select = "SELECT
                             r.reportid,
+                            r.patientid,
                             p.firstname,
                             p.lastname,
                             p.ssn,
                             p.telephone,
                             p.email,
                             r.created,
+                            r.doctorid,
                             d.doctorname,
                             r.comment
                            FROM onclinic.reports r
@@ -128,6 +171,12 @@
         }
 
         //////////////////////////
+
+        protected function _deleteDetails($reportid){
+            $this->db->delete('reports_items',array('reportid'=>$reportid));
+            return $this->db->affected_rows();
+        }
+
         private function transform($arr){
             $transformed = array();
             foreach($arr as $row){
@@ -143,7 +192,8 @@
                 'patientid' => $patientid,
                 'testid' => $testid,
                 'value' => $result,
-                'testcomment'=> $this->db->escape($comment)
+                'testcomment'=> $comment
+                //'testcomment'=> $this->db->escape($comment)
             );
             return $this->db->insert('reports_items',$data);
         }

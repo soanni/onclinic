@@ -24,6 +24,7 @@ class Report extends CI_Controller{
         $this->load->library('session');
     }
 
+    /////////////////////////////// CRUD
     public function create(){
         // only operators could see report create page
         if(isset($_SESSION['is_operator']) && $_SESSION['is_operator']){
@@ -46,6 +47,38 @@ class Report extends CI_Controller{
             }
         }else{
             redirect('/');
+        }
+    }
+
+    public function edit($reportid){
+        if(isset($_SESSION['is_operator']) && $_SESSION['is_operator']){
+            if(!is_null($reportid) && is_numeric($reportid)){
+                $data = new stdClass();
+                $data->title = 'Edit report';
+                $head = $this->report_model->getReportHead($reportid);
+                $details = $this->report_model->getReportDetails($reportid);
+                $data->head = $head[0];
+                $data->details = $details;
+                // for select lists fullfillment
+                $data->patients = $this->report_model->getPatients();
+                $data->doctors = $this->report_model->getDoctors();
+                $data->tests = $this->report_model->getTests();
+                $this->form_validation->set_rules($this->_validation_rules);
+                if($this->form_validation->run() === FALSE){
+                    $this->load->view('report/update',$data);
+                }else{
+                    // update
+                    $results = $this->input->post();
+                    if($this->report_model->updateReport($reportid, $results)) {
+                        redirect('report/index');
+                    }else{
+                        $data->error = 'The error occured during saving the report in the database. Please,try again.';
+                        $this->load->view('report/update',$data);
+                    }
+                }
+            }else{
+                redirect('report/index');
+            }
         }
     }
 
@@ -85,6 +118,23 @@ class Report extends CI_Controller{
             }else{
                 redirect('/');
             }
+        }
+    }
+
+    public function delete($reportid){
+        // only for operators
+        if(isset($_SESSION['is_operator']) && $_SESSION['is_operator']){
+            $data = new stdClass();
+            $data->title = 'List of reports';
+            $data->heading = "List of reports";
+            if(!$this->report_model->deleteReport($reportid)){
+                $data->error = "The error occured during deleting the report in the database. Please,try again.";
+                $this->load->view('report/list',$data);
+            }else{
+                redirect('report/index');
+            }
+        }else{
+            redirect('/');
         }
     }
 

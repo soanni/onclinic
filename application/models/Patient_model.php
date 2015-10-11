@@ -5,7 +5,7 @@ class Patient_model extends CI_Model{
         parent::__construct();
         $this->load->database();
     }
-
+    ///////////////////// CRUD
     public function create($data){
         // passcode shouldn't be changed to lower case
         $passcode = $data['passcode'];
@@ -20,23 +20,32 @@ class Patient_model extends CI_Model{
         return $this->db->insert('patients',$data);
     }
 
-    public function getAllRows(){
-        $this->db->select('patient_id,firstname, lastname, age, sex, ssn, telephone, email, birthday, locked');
-        $this->db->from('patients');
-        $this->db->order_by('lastname','ASC');
-        return $this->db->get()->result_array();
-    }
-
-    public function getRow($id){
-        $query = $this->db->get_where('patients',array('patient_id'=>$id));
-        return $query->row_array();
-    }
-
     public function update($data,$id){
         $data['firstname'] = strtolower($data['firstname']);
         $data['lastname'] = strtolower($data['lastname']);
         $this->db->where('patient_id',$id);
         return $this->db->update('patients',$data);
+    }
+
+
+    ///////////////////////////////////////////////////////
+
+    public function getAllRows(){
+        $this->db->select('patient_id,firstname, lastname, age, sex, ssn, telephone, email, birthday, locked');
+        $this->db->from('patients');
+        $this->db->order_by('lastname','ASC');
+        $arr = $this->db->get()->result_array();
+        $newarr = array();
+        foreach($arr as $row){
+            $row['hasReports'] = $this->hasPatientReports($row['patient_id']);
+            $newarr[] = $row;
+        }
+        return $newarr;
+    }
+
+    public function getRow($id){
+        $query = $this->db->get_where('patients',array('patient_id'=>$id));
+        return $query->row_array();
     }
 
     public function lockPatient($id){
@@ -61,5 +70,10 @@ class Patient_model extends CI_Model{
     public function getPatientRow($first,$last){
         $query = $this->db->get_where('patients',array('firstname'=>$first,'lastname'=>$last));
         return $query->row_array();
+    }
+
+    public function hasPatientReports($patientid){
+        $query = $this->db->get_where('reports',array('patientid'=>$patientid));
+        return $query->num_rows();
     }
 }

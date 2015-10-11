@@ -222,14 +222,14 @@ body {
 	min-height: 1100px;
 	overflow: hidden;
 	padding: 20px 0;
-	width: 960px;
+	width: 1050px;
 }
 #body .sidebar {
 	background: #94acb3;
 	float: left;
 	margin: 0 10px 0 20px;
 	padding: 0 0 10px;
-	width: 210px;
+	width: 110px;
 }
 #body .sidebar h3 {
 	border-bottom: 2px solid #ffe600;
@@ -291,10 +291,7 @@ body {
 	text-decoration: underline;
 }
 #body .content {
-	float: left;
-	margin: 0 10px 0 20px;
-	padding: 0;
-	width: 960px;
+	margin: 0 0 0 150px;
 }
 #body .content > img {
 	border: 1px solid #fff;

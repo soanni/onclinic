@@ -3,6 +3,7 @@
     include APPPATH . 'views\templates\lab_header.php';
 ?>
     <div id="body">
+        <?php include_once APPPATH . 'views\templates\lab_sidebar.php';?>
         <div class="content">
             <h2 class="main_heading">List of patients</h2>
             <table id="patients">
@@ -47,7 +48,9 @@
                         <?php else: ?>
                             <td><a href="<?php echo site_url('patient/lock/') . '/' .$row['patient_id'];?>">Disable</a></td>
                         <?php endif;?>
-                        <td><a href="<?php echo site_url('report/index/') . '/' .$row['patient_id'];?>">Reports</a></td>
+                        <?php if($row['hasReports']):?>
+                            <td><a href="<?php echo site_url('report/index/') . '/' .$row['patient_id'];?>">Reports</a></td>
+                        <?php endif;?>
                     </tr>
                 <?php endforeach; ?>
                 </tbody>

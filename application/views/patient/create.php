@@ -2,6 +2,7 @@
     defined('BASEPATH') OR exit('No direct script access allowed');
     include APPPATH . 'views\templates\lab_header.php'; ?>
 <div id="body">
+    <?php include_once APPPATH . 'views\templates\lab_sidebar.php';?>
     <?php echo validation_errors();?>
     <?php if(isset($error)) : ?>
         <div>
