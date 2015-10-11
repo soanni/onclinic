@@ -102,7 +102,19 @@ class Report extends CI_Controller{
         }
     }
 
-    public function exportToPdfAndEmail($reportid){
+    //send PDF on email
+    public function sendPdf($reportid){
+        $this->load->library('My_PHPMailer');
+        $file = $this->exportToPdf($reportid,'F');
+        $head = $this->report_model->getReportHead($reportid);
+        $recipient = $head[0]['firstname'] . " ". $head[0]['lastname'];
+        if($this->send_email($head[0]['email'], $file, 'report.pdf', $recipient)){
+            $this->view($reportid);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////
+    public function exportToPdf($reportid,$flag = D){
         $filename = "report{$reportid}" . time();
         $pdfFilePath = str_replace('/','',FCPATH . DIRECTORY_SEPARATOR . "downloads" . DIRECTORY_SEPARATOR . "{$filename}" . ".pdf");
         $data = new stdClass();
@@ -119,7 +131,37 @@ class Report extends CI_Controller{
             $pdf->SetFooter($_SERVER['HTTP_HOST'].'|{PAGENO}|'.date(DATE_RFC822));
             $pdf->WriteHTML($html);
             // save to file
-            $pdf->Output($pdfFilePath, 'F');
+            $pdf->Output($pdfFilePath, $flag);
+            if($flag == 'F'){
+                return $pdfFilePath;
+            }
+        }
+    }
+
+    private function send_email($destination, $filepath, $filename, $recipient){
+        $data = new stdClass();
+        $mail = new PHPMailer();
+        $mail->IsSMTP();
+        $mail->SMTPAuth   = true;
+        $mail->SMTPSecure = "ssl";
+        $mail->Host       = "smtp.mail.ru";
+        $mail->Port       = 465;
+        $mail->Username   = "crossover_trial@mail.ru";
+        $mail->Password   = "jd5xugLMrr";
+        $mail->SetFrom('crossover_trial@mail.ru', 'Webmaster');
+        $mail->AddReplyTo('crossover_trial@mail.ru', 'Andrey Andreev');
+        $mail->Subject    = "PDF Report From Onclinic Samara";
+        $mail->Body      = "Hello, {$recipient}. The requested PDF report is attached to this email. Best regards, OnClinic Samara";
+        $mail->AltBody    = "Plain text message";
+        $mail->AddAddress($destination, $recipient);
+        $mail->AddAttachment($filepath, $filename);
+        if(!$mail->Send()){
+            $data->heading = "Mail Error";
+            $data->message = "Error: " . $mail->ErrorInfo;
+            $this->load->view('errors/html/error_general', $data);
+            return 0;
+        } else {
+            return 1;
         }
     }
 }

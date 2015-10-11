@@ -5,8 +5,10 @@
 <div id="body">
     <p class="content">
         <h2 class="main_heading"><?php echo "Report #{$head['reportid']}";?></h2>
-        <?php $link = "report/exportToPdf/". $head['reportid']; ?>
-        <a href="<?php echo site_url($link);?>">Export to PDF</a>
+        <?php $link = "report/exportToPdf/". $head['reportid'];?>
+        <?php $maillink = "report/sendPdf/". $head['reportid'];?>
+        <a href="<?php echo site_url($link);?>">Export to PDF</a></br>
+        <a href="<?php echo site_url($maillink);?>">Email PDF report</a>
         <div class="report_head">
             <p>
                 <ul>
