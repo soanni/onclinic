@@ -64,9 +64,7 @@
             // trying to delete details first
             if($this->_deleteDetails($reportid)){
                 $this->db->delete('reports',array('reportid'=>$reportid));
-                if($this->db->affected_rows()){
-                    return 1;
-                }
+                return $this->db->affected_rows();
             }
             return 0;
         }

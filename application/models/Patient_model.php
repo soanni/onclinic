@@ -27,6 +27,11 @@ class Patient_model extends CI_Model{
         return $this->db->update('patients',$data);
     }
 
+    public function deletePatient($patientid){
+        $this->db->delete('patients',array('patient_id'=>$patientid));
+        return $this->db->affected_rows();
+    }
+
 
     ///////////////////////////////////////////////////////
 

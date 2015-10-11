@@ -66,66 +66,28 @@ class Patient extends CI_Controller{
         $this->load->library('session');
     }
 
-    // used for autocomplete login field
-    public function getLastFirstNames(){
-        $term = $this->input->post('data');
-        $names = $this->patient_model->getLastFirst($term);
-        echo json_encode($names);
-    }
+    //////////////////////////////////////CRUD /////////////////////////
 
-    public function login(){
-        $data = new stdClass();
-        $data->title = 'OnClinic Patient Login';
-        $rules = array(
-            array(
-                'field'=>'username',
-                'label'=>'Username',
-                'rules'=>array('trim','required','min_length[4]')
-            ),
-            array(
-                'field'=>'pass',
-                'label'=>'Password',
-                'rules'=>array('trim','required','min_length[6]')
-            )
-        );
-
-        $this->form_validation->set_rules($rules);
-        if ($this->form_validation->run() === FALSE) {
-            $this->load->view('templates/lab_header',$data);
-            $this->load->view('patient/login', $data);
-            $this->load->view('templates/lab_footer');
-        }else{
-            $username = $this->input->post('username');
-            $names = explode(', ',$username);
-            $password = $this->input->post('pass');
-            $userrow = $this->patient_model->getPatientRow($names[1],$names[0]);
-            if(!empty($userrow)){
-                // if user is locked then login is impossible
-                if($userrow['locked']){
-                    $data->error = "User {$username} is locked. You cannot proceed further.";
-                }else{
-                    // user is unlocked so we need to check the password correctness
-                    // passcode is not encrypted due to it have to be displayed in update patient form
-                    if($password == $userrow['passcode']){
-                        // set session variables
-                        $_SESSION['user_id'] = (int)$userrow['patient_id'];
-                        $_SESSION['username'] = (string)$username;
-                        $_SESSION['logged_in'] = (bool)true;
-                        $_SESSION['is_operator'] = (bool)false;
-                        $_SESSION['is_patient'] = (bool)true;
-                        $redirect = site_url('report/index/' . $userrow['patient_id']);
-                        redirect($redirect);
-                        exit;
-                    }else{
-                        $data->error = "Incorrect password provided. Please, try again";
-                    }
-                }
+    public function delete($patientid){
+        // only for operators
+        if(isset($_SESSION['is_operator']) && $_SESSION['is_operator']){
+            $data = new stdClass();
+            $data->title = 'List of patients';
+            // check if there are any reports for the given patient
+            if($this->patient_model->hasPatientReports($patientid)){
+                $data->error = "The given patient has reports in the database. Please delete these reports first.";
+                $this->load->view('general/error_delete',$data);
             }else{
-                $data->error = "There is no such username {$username} in the system.";
+                //trying to delete a patient
+                if(!$this->patient_model->deletePatient($patientid)){
+                    $data->error = "The error occured during deleting the patient from the database. Please,try again.";
+                    $this->load->view('general/error_delete',$data);
+                }else{
+                    redirect('patient/index');
+                }
             }
-            $this->load->view('templates/lab_header',$data);
-            $this->load->view('patient/login', $data);
-            $this->load->view('templates/lab_footer');
+        }else{
+            redirect('/');
         }
     }
 
@@ -206,6 +168,70 @@ class Patient extends CI_Controller{
             }
         }else{
             redirect('/');
+        }
+    }
+    ////////////////////////////
+
+    // used for autocomplete login field
+    public function getLastFirstNames(){
+        $term = $this->input->post('data');
+        $names = $this->patient_model->getLastFirst($term);
+        echo json_encode($names);
+    }
+
+    public function login(){
+        $data = new stdClass();
+        $data->title = 'OnClinic Patient Login';
+        $rules = array(
+            array(
+                'field'=>'username',
+                'label'=>'Username',
+                'rules'=>array('trim','required','min_length[4]')
+            ),
+            array(
+                'field'=>'pass',
+                'label'=>'Password',
+                'rules'=>array('trim','required','min_length[6]')
+            )
+        );
+
+        $this->form_validation->set_rules($rules);
+        if ($this->form_validation->run() === FALSE) {
+            $this->load->view('templates/lab_header',$data);
+            $this->load->view('patient/login', $data);
+            $this->load->view('templates/lab_footer');
+        }else{
+            $username = $this->input->post('username');
+            $names = explode(', ',$username);
+            $password = $this->input->post('pass');
+            $userrow = $this->patient_model->getPatientRow($names[1],$names[0]);
+            if(!empty($userrow)){
+                // if user is locked then login is impossible
+                if($userrow['locked']){
+                    $data->error = "User {$username} is locked. You cannot proceed further.";
+                }else{
+                    // user is unlocked so we need to check the password correctness
+                    // passcode is not encrypted due to it have to be displayed in update patient form
+                    if($password == $userrow['passcode']){
+                        // set session variables
+                        $_SESSION['user_id'] = (int)$userrow['patient_id'];
+                        $_SESSION['username'] = (string)$username;
+                        $_SESSION['logged_in'] = (bool)true;
+                        $_SESSION['is_operator'] = (bool)false;
+                        $_SESSION['is_patient'] = (bool)true;
+                        $redirect = site_url('report/index/' . $userrow['patient_id']);
+                        redirect($redirect);
+                        exit;
+                    }else{
+                        $data->error = "Incorrect password provided. Please, try again";
+                    }
+                }
+            }else{
+                $data->error = "There is no such username {$username} in the system.";
+            }
+            $this->load->view('templates/lab_header',$data);
+            $this->load->view('patient/login', $data);
+            $this->load->view('templates/lab_footer');
         }
     }
 
